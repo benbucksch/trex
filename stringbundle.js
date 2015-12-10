@@ -302,8 +302,3 @@ var StringBundleUtils = {
     return content.split("\n");
   },
 }
-
-
-exports.StringBundle = StringBundle;
-exports.translateElements = translateElements;
-exports.getLocale = getLocale;

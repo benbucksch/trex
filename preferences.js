@@ -37,6 +37,24 @@
  * ***** END LICENSE BLOCK ***** */
 
 /**
+ * This implements a way to store user preferences, settings, configuration.
+ * It stores strings, integers and booleans.
+ * Pref keys are organized in a hierarchy called branches, separated by dots,
+ * e.g. "email.login.username" = "ben" (string)
+ * It closely matches the Firefox preferences that you can see in <about:config>.
+ *
+ * Use it like:
+ * var loginPrefs = myPrefs("email.login.") // mind the trailing dot
+ * loginPrefs.set("username", "ben");
+ * var useSSL = loginPrefs.get("ssl", true); // default true
+ *
+ * You can also observe whole pref branches for changes, which allows
+ * you to update your UI everywhere automatically
+ * (subject/observer design pattern).
+ */
+
+
+/**
  * A cache of pref observers.
  *
  * We use this to remove observers when a caller calls Preferences::ignore.
@@ -53,7 +71,7 @@
  *   thisObject {Object}
  * } }
  */
-var gObservers = [];
+var gPrefObservers = [];
 
 function Preferences(branch) {
   this._prefBranch = branch;
@@ -293,7 +311,7 @@ Preferences.prototype = {
       callback : callback,
       thisObject : thisObject,
     };
-    gObservers.push(observer);
+    gPrefObservers.push(observer);
 
     return observer;
   },
@@ -323,12 +341,12 @@ Preferences.prototype = {
   ignore: function(prefName, callback, thisObject) {
     var fullPrefName = this._prefBranch + (prefName || "");
 
-    var removes = gObservers.filter(function(v) { return
+    var removes = gPrefObservers.filter(function(v) { return
         v.prefName == fullPrefName &&
         v.callback == callback &&
         v.thisObject == thisObject; });
     for (var i in removes)
-      gObservers.splice(gObservers.indexOf(removes[i]), 1);
+      gPrefObservers.splice(gPrefObservers.indexOf(removes[i]), 1);
   },
 
   /**
@@ -351,7 +369,7 @@ Preferences.prototype = {
   _notifyObservers: function(prefName, newValue) {
     var fullPrefName = this._prefBranch + (prefName || "");
 
-    for (var i in gObservers)
+    for (var i in gPrefObservers)
     {
       var observer = observers[i];
       if ( !(observer.prefName == fullPrefName ||
@@ -446,6 +464,4 @@ function isObject(val) {
           val.constructor.name == "Object");
 }
 
-
-exports.myPrefs = new Preferences("");
-exports.Preferences = Preferences;
+var myPrefs = new Preferences("");

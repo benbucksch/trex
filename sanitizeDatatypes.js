@@ -247,8 +247,3 @@ MalformedException.prototype = {
     return "Input validation failed: " + msgID.replace(/_/g, " ").replace(".error", "");
   },
 }
-
-exports.MalformedException = MalformedException;
-for (var symbolName in sanitize)
-  exports[symbolName] = sanitize[symbolName];
-});
