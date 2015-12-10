@@ -5,10 +5,9 @@
 <meta charset="utf-8"></meta>
 <link href="appkit.css" rel="stylesheet" type="text/css"></link>
 <link href="appkit-flexbox.css" rel="stylesheet" type="text/css"></link>
+<script src="stringbundle.js" type="text/javascript"></script>
 <script src="appkit.js" type="text/javascript"></script>
 <script src="app.js" type="text/javascript"></script>
-<script src="util.js" type="text/javascript"></script>
-<script src="uiutil.js" type="text/javascript"></script>
 </head>
 <body>
 
@@ -36,6 +35,60 @@
     </vbox>
   </hbox>
 </vbox>
+
+<hbox id="intro-box">
+  <description id="intro" translate="login.intro"></description>
+</hbox>
+<vbox pack="start">
+  <grid>
+    <columns>
+      <column />
+      <column flex="1"/>
+    </columns>
+    <rows>
+      <row align="baseline">
+        <label control="emailaddress"
+            translate-attr="value=emailaddress.label,
+                accesskey=emailaddress.accesskey"
+            />
+        <textbox id="emailaddress"
+            />
+      </row>
+      <row align="baseline">
+        <label control="password"
+            translate-attr="value=password.label,
+                accesskey=password.accesskey"
+            />
+        <textbox id="password"
+            type="password"
+            onfocus="onLeaveEmailaddress();"
+            />
+      </row>
+    </rows>
+  </grid>
+</vbox>
+<hbox id="long-session-box">
+  <checkbox id="long-session"
+      translate-attr="value=long-session.label,
+          accesskey=long-session.accesskey"
+      />
+</hbox>
+<hbox id="create-account-box">
+  <button id="create-account"
+      type="link"
+      translate-attr="label=create-account.label,
+          accesskey=create-account.accesskey"
+      oncommand="onCreateAccount();"
+      />
+</hbox>
+<hbox id="error-box">
+  <description id="error-msg" />
+</hbox>
+<hbox id="forgot-password-box">
+  <label id="forgot-password"
+    translate-attr="value=forgotpassword.label"
+    class="text-link"/>
+</hbox>
 
 </body>
 </html>

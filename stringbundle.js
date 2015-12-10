@@ -58,7 +58,7 @@
  * You MUST also configure |supportedLanguages| below.
  */
 function StringBundle(path) {
-  this._url = "/locale/" + getLocale() + "/" + path;
+  this._url = "locale/" + getLocale() + "/" + path;
   if (path.indexOf(".") == -1) {
     this._url += ".properties"; // default file extension
   }
@@ -201,21 +201,42 @@ StringBundle.prototype = {
  * gets the corresponding string from the |stringbundle|,
  * and sets the element content textnode to that string.
  *
+ * Use it like this:
+ * JS: var gFooBundle = new StringBundle("email/foo.properties");
+ *     translateElements(document, gFooBundle, {"brand": brandName });
+ * HTML: <a translate="resetpassword.label"
+ *     translate-attr="title=resetpassword.tooltip" />
+ * takes the stringbundle value for "password.label", replaces placeholder
+ * %brand% with brandName, and inserts a text node as child of the <label>.
+ * Similarly, translate-attr would takes the stringbundle text for
+ * "resetpassword" and set it as value for attribute tooltip, e.g. ends up as
+ * <a title="Get a new password by email">Reset password</a>
+ *
  * @param container {DOMElement}   Iterators over this element
  * @param stringbundle {StringBundle}
  * @param brand {String} brand to use for substitution in strings
  */
 function translateElements(container, stringbundle, placeholders) {
-  var elements = allChildElements(container);
-  for (var i in elements) {
-    var el = elements[i];
-    if (!el.hasAttribute("translate"))
-      continue;
+  [].forEach.call(container.querySelectorAll("*[translate]"), function(el) {
     var label = stringbundle.get(el.getAttribute("translate"));
-    for (var placeholder in placeholders)
+    for (var placeholder in placeholders) {
       label = label.replace("%" + placeholder + "%", placeholders[placeholder]);
-    el.appendChild(cTN(label));
-  }
+    }
+    el.appendChild(document.createTextNode(label));
+  });
+
+  [].forEach.call(container.querySelectorAll("*[translate-attr]"), function(el) {
+    el.getAttribute("translate-attr").split(",").forEach(function(attrNameValue) {
+      var attrSplit = attrNameValue.split("=");
+      var attrName = attrSplit[0].trim();
+      var attrValue = attrSplit[1].trim();
+      var label = stringbundle.get(attrValue);
+      for (var placeholder in placeholders) {
+        label = label.replace("%" + placeholder + "%", placeholders[placeholder]);
+      }
+      el.setAttribute(attrName, label);
+    });
+  });
 }
 
 
@@ -232,7 +253,7 @@ function translateElements(container, stringbundle, placeholders) {
  */
 function pluralform(count, str) {
   var sp = str.split(";");
-  assert(sp.length == 3, "pluralform: expected 3 parts in str: " + str);
+  StringBundleUtils.assert(sp.length == 3, "pluralform: expected 3 parts in str: " + str);
   var index;
   if (count == 0)
     index = 0;
@@ -253,7 +274,7 @@ function pluralform(count, str) {
 * @returns {String} e.g. "en"
 * @see also getUILocale()
 */
-function getLocale : function() {
+function getLocale() {
   // Which translations you have for your app
   // TODO CONFIGURE THIS
   var supportedLanguages = [ "en", "de" ];
@@ -274,9 +295,9 @@ var StringBundleUtils = {
   * @return {String}   the contents of the file, as one long string
   */
   readURLasUTF8 : function (url) {
-    assert(url && typeof(url) == "string", "uri must be a string");
+    StringBundleUtils.assert(url && typeof(url) == "string", "uri must be a string");
     var req = new XMLHttpRequest();
-    ddebug("trying to open " + url);
+    console.log("trying to open " + url);
     req.onerror = function (e) { console.error(e); }
     req.onload = function () {}
     req.open("GET", url, false); // sync
@@ -300,5 +321,12 @@ var StringBundleUtils = {
     content = content.replace("\r\n", "\n");
     content = content.replace("\r", "\n");
     return content.split("\n");
+  },
+
+  assert : function (test, errorMsg)
+  {
+    console.assert(test, errorMsg);
+    if (!test)
+      throw new Error(errorMsg ? errorMsg : "Bug: assertion failed");
   },
 }
