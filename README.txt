@@ -1,6 +1,6 @@
   0. Summary
 
-TAppKit provides a thin shim layer on top of HTML5 that brings
+TRex provides a thin shim layer on top of HTML5 that brings
 the tags, programming style, and expressiveness of XUL to HTML. There is
 an <hbox>, <vbox>, <textbox>, <menu> and the like.
 
@@ -47,9 +47,9 @@ Simply put: HTML5, when used for application GUIs, lacks the easy of
 use, expressiveness, clarity and consistency of a coherent widget kit.
 
 
-  2. TAppKit: GUI-oriented layout and widget elements
+  2. TRex: GUI-oriented layout and widget elements
 
-The idea of TAppKit is to provide a thin shim layer on top of HTML5 that
+The idea of TRex is to provide a thin shim layer on top of HTML5 that
 brings the tags, programming style, and expressiveness of XUL to HTML.
 There is an <hbox>, <vbox>, <textbox>, <menu> and the like. There is a
 common "command" and "changed" event for all widgets that it applies to.
@@ -131,15 +131,15 @@ times (see above).
 
   4. Target audience
 
-I hope that TAppKit will help people who are coming from native
+I hope that TRex will help people who are coming from native
 application development to HTML. It might also help new HTML5
 application projects that need to build large GUI applications with a
 native-feeling UI, for example possibly a future Thunderbird or
 similarly big custom applications.
 
 It does not replace AngularJS or similar JS libraries, but rather
-complements it. TAppKit and AngularJS simply solve different problems.
-Ditto Tween, jQuery, jQueryUI. TAppKit doesn't depend on them, nor
+complements it. TRex and AngularJS simply solve different problems.
+Ditto Tween, jQuery, jQueryUI. TRex doesn't depend on them, nor
 should interfere with them.
 
 
@@ -149,5 +149,4 @@ I have some basic code that is usable, but it's far from complete. In
 true open-source bazar nature, I throw it out there and see whether
 people find it useful or like it. Contributors welcome.
 
-http://tappkit.org
-https://github.com/benbucksch/tappkit
+https://github.com/benbucksch/trex
