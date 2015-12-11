@@ -1,18 +1,16 @@
   0. Summary
 
-TRex provides a thin shim layer on top of HTML5 that brings
-the tags, programming style, and expressiveness of XUL to HTML. There is
+TRex is a HTML UI markup language and JS library.
+It provides a thin shim layer on top of HTML5 that brings the
+tags, programming style, and expressiveness of XUL to HTML. There is
 an <hbox>, <vbox>, <textbox>, <menu> and the like.
 
 
   1. Motivation
 
-The idea of XUL, using markup to define UI dialogs, was great.
-Microsoft imitated XUL and named it XAML, which is core to .NET today.
-XUL uses declarative markup like HTML, but was created to fill a
-specific need that HTML didn't fill: GUI widgets and a layout model for GUI
-apps. 15 years later, with HTML5, we're in a much better shape, but the
-basic need is still there.
+XUL was the XML UI Language. The idea to use markup to define UI dialogs
+was great. Microsoft imitated XUL and named it XAML, which is core to .NET today.
+TRex is the HTML UI markup language.
 
 
   1.1. Layout
@@ -20,13 +18,13 @@ basic need is still there.
 HTML was designed for pages of human language text, for flow text. Pages
 are made up from <div>s (block) and <span>s (inline) and scroll away to
 the bottom, and the layout happens with the CSS box model. It is
-incredibly difficult to create something like the typical 5-pane UI
-layout, with fixed header, left and right fixed sidebar, and bottom.
-Just centering something is unbelievably hard
+difficult to create something like the typical 5-pane UI layout,
+with fixed header, left and right fixed sidebar, and bottom.
+Just centering something is unbelievably complex
 <https://css-tricks.com/centering-css-complete-guide/>
-<http://vanseodesign.com/css/vertical-centering/>. All of these are
-trivial with just one or a few <hbox>/<vbox> elements in XUL. And it's
-much faster to render, too. (Before you say flexbox, read on.)
+<http://vanseodesign.com/css/vertical-centering/>.
+In XUL, all of these are trivial with just one or a few <hbox>/<vbox> elements.
+And it's much faster to render, too. (Before you say flexbox, read on.)
 
 
   1.2. Widgets
