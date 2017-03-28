@@ -24,7 +24,7 @@ fastlist tbody {
   height: 450px;
 }
 fastlist header,
-fastlist tbody > line {
+fastlist tbody > row {
   display: table-row;
 }
 fastlist header > * {
@@ -32,7 +32,7 @@ fastlist header > * {
   padding: 2px 8px;
   border: 1px outset black;
 }
-fastlist tbody > line > * {
+fastlist tbody > row > * {
   display: table-cell;
   padding: 0px 5px; /* TODO vertical padding triggers a bug in the size calculation */
 }
@@ -42,5 +42,7 @@ fastlist > .scrollbar {
   width: 20px;
   overflow-y: scroll;
   overflow-x: hidden;
-  float: right;
+  position: absolute;
+  top: 0;
+  right: 20px;
 }

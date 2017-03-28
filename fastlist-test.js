@@ -1,5 +1,6 @@
 function onLoad() {
   new Fastlist(E("list"));
+  populate();
 }
 window.addEventListener("load", onLoad, false);
 
