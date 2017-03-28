@@ -12,3 +12,35 @@ body {
 *[hidden=true] {
   display: none;
 }
+
+
+
+fastlist > table {
+  height: 100%;
+  width: 100%;
+}
+fastlist tbody {
+  display: table-row-group;
+  height: 450px;
+}
+fastlist header,
+fastlist tbody > line {
+  display: table-row;
+}
+fastlist header > * {
+  display: table-cell;
+  padding: 2px 8px;
+  border: 1px outset black;
+}
+fastlist tbody > line > * {
+  display: table-cell;
+  padding: 0px 5px; /* TODO vertical padding triggers a bug in the size calculation */
+}
+fastlist {
+}
+fastlist > .scrollbar {
+  width: 20px;
+  overflow-y: scroll;
+  overflow-x: hidden;
+  float: right;
+}
