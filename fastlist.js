@@ -1,3 +1,18 @@
+/**
+There are many HTML tree widget implementations out there, but most fail when you start pushing 100000 entries in there. The problem is that most create a DOM nodes for every line and cell, and once you get to a million DOM nodes, that's a noticeable load time and costs RAM. For Thunderbird, we need to render folders with tens of thousands and a hundred thousand emails.
+
+Here's a prototype. This is just a start. It doesn't contain tree functionality yet, just a table. The tree functionality would be added on top. There are also many things to be polished: Styling, alignment, fixing column width to not change while scrolling etc..
+
+But the basic idea of a fast list is working. It's loading 100000 entries on load, and you can add 100000 more on a button click. You will notice that the addition is very fast. More importantly, scrolling is very fast. Scrolling should work both using the scroll bar and using the mouse wheel.
+
+Try it out at http://benbucksch.github.io/trex/fastlist-test.html
+
+The basic trick is that I don't create DOM nodes for every rows, but only for the 10 or so visible rows. The data is in a pure data array. When the user scrolls, I do not move or destroy DOM nodes, but merely replace their text content and leave the nodes in place. I then listen to mouse wheel scroll events, and scroll correspondingly. The scroll bar at the right is a dummy element, and I set the inner height of it to the calculated height in px that the rows would have, if all rows would be DOM nodes. Then I listen to scroll events again, and translate them to corresponding row content changes.
+From what I understand, that is the basic principle that XUL <tree>s also work with. Just that XUL <tree>s are implemented in C++, and I implemented it in JavaScript and HTML. (And HTML was again the most painful part in it.)
+
+The coolest thing is that we're no longer limited to a single line per row, and we can have rich HTML content in each cell. XUL <tree>s can do neither, and that's a major limitation. We've always wanted to make the message list prettier, but we couldn't. Now we can.
+ */
+
 function Fastlist(element) {
   assert(element && element.localName == "fastlist");
   this._listE = element;
