@@ -14,14 +14,12 @@ body {
 }
 
 
-
 fastlist > table {
   height: 100%;
   width: 100%;
 }
 fastlist tbody {
   display: table-row-group;
-  height: 450px;
 }
 fastlist header,
 fastlist tbody > row {
@@ -37,12 +35,14 @@ fastlist tbody > row > * {
   padding: 0px 5px; /* TODO vertical padding triggers a bug in the size calculation */
 }
 fastlist {
+  position: relative;
 }
 fastlist > .scrollbar {
-  width: 20px;
   overflow-y: scroll;
   overflow-x: hidden;
+  height: 100%;
   position: absolute;
-  top: 0;
-  right: 20px;
+  top: 26px;
+  right: 0px;
+  width: 20px;
 }

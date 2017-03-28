@@ -16,6 +16,7 @@ function Fastlist(element) {
   this._contentE = cE(tableE, "tbody", "content", { flex : 1 });
 
   this._scrollbarE = cE(this._listE, "div", "scrollbar");
+  this._scrollbarContentE = cE(this._scrollbarE, "div", "scrollbar-content");
   this._scrollbarE.addEventListener("scroll", event => this.scrollBar(event), false);
   this._listE.addEventListener("wheel", event => this.scrollWheel(event), false);
 }
@@ -36,6 +37,12 @@ Fastlist.prototype = {
    * {<vbox> DOMElement}
    */
   _scrollbarE : null,
+
+  /**
+   * The dummy content of the scrollbar, to set the right height.
+   * {<vbox> DOMElement}
+   */
+  _scrollbarContentE : null,
 
   /**
    * Original, empty template for a row.
@@ -95,7 +102,7 @@ Fastlist.prototype = {
    * @param obj {Object} values for this row
    * @param rowE {<row> DOMElement}
    */
-  fillLine : function(rowE, obj) {
+  fillRow : function(rowE, obj) {
     nodeListToArray(rowE.querySelectorAll("*[field]")).forEach(fieldE => {
       var fieldName = fieldE.getAttribute("field");
       var value = obj[fieldName];
@@ -109,29 +116,30 @@ Fastlist.prototype = {
    * Updates the DOM elements with the rows.
    */
   _updateSize : function() {
-    var size = this._entries.length;
-    var scrollHeight = this._rowHeight * size;
+    var scrollHeight = this._entries.length * this._rowHeight;
     //var availableHeight = this._getHeight(this._contentE);
-    var availableHeight = this._listE.offsetHeight - this._rowHeight - 3; // TODO
+    var availableHeight = this._listE.offsetHeight - this._rowHeight - 6; // TODO
 
-    var needLines = Math.min(size, Math.round(availableHeight / this._rowHeight));
-    var newLines = needLines - this._rowElements.length;
-    if (newLines > 0) {
-      for (var i = 0; i < newLines; i++) {
-        var newLineE = this._rowTemplate.cloneNode(true);
-        this._contentE.appendChild(newLineE);
-        this._rowElements.push(newLineE);
+    var needRows = Math.min(this._entries.length, Math.round(availableHeight / this._rowHeight));
+    var newRows = needRows - this._rowElements.length;
+    if (newRows > 0) {
+      for (var i = 0; i < newRows; i++) {
+        var newRowE = this._rowTemplate.cloneNode(true);
+        this._contentE.appendChild(newRowE);
+        this._rowElements.push(newRowE);
       }
-    } else if (newLines < 0) {
-      for (var i = 0; i < -newLines; i++) {
-        var oldLineE = this._rowElements.pop();
-        this._contentE.removeChild(oldLineE);
+    } else if (newRows < 0) {
+      for (var i = 0; i < -newRows; i++) {
+        var oldRowE = this._rowElements.pop();
+        this._contentE.removeChild(oldRowE);
       }
     }
 
-    this._scrollbarE.scrollHeight = scrollHeight;
+    this._scrollbarContentE.width = 1;
+    //this._scrollbarContentE.style.height = scrollHeight;
+    this._scrollbarContentE.setAttribute("style", "height: " +  scrollHeight + "px");
     if (scrollHeight > availableHeight) {
-      this._scrollbarE.setAttribute("hidden", false);
+      this._scrollbarE.removeAttribute("hidden");
     } else {
       this._scrollbarE.setAttribute("hidden", true);
     }
@@ -145,7 +153,6 @@ Fastlist.prototype = {
     // getBoundingClientRect does not include margin
     var style = window.getComputedStyle(el);
     height += parseFloat(style.marginTop) + parseFloat(style.marginBottom);
-    height += parseFloat(style.paddingTop) + parseFloat(style.paddingBottom);
 
     nodeListToArray(el.childNodes).forEach(
           childNode => height += childNode.nodeType == 1 ? this._getHeight(childNode) : 0);
@@ -161,23 +168,23 @@ Fastlist.prototype = {
    */
   _refreshContent : function() {
     // TODO be lazy, avoid unnecessary refreshs
-    var renderLine = this._scrollPos;
+    var renderRow = this._scrollPos;
     this._rowElements.forEach(rowE => {
-      var obj = this._entries[renderLine++];
+      var obj = this._entries[renderRow++];
       if (!obj) {
         return;
       }
-      this.fillLine(rowE, obj);
+      this.fillRow(rowE, obj);
     });
   },
 
   scrollWheel : function(event) {
-    var scrollLines = 3; // How many rows to scroll each time
+    var scrollRows = 3; // How many rows to scroll each time
     if (event.deltaY > 0) {
-      this._scrollPos = Math.min(this._scrollPos + scrollLines, this._entries.length - this._rowElements.length);
+      this._scrollPos = Math.min(this._scrollPos + scrollRows, this._entries.length - this._rowElements.length);
       //this._scrollbarE.scrollTop = Math.min(this._scrollbarE.scrollTop + this._rowHeight, this._scrollbarE.scrollHeight);
     } else if (event.deltaY < 0) {
-      this._scrollPos = Math.max(this._scrollPos - scrollLines, 0);
+      this._scrollPos = Math.max(this._scrollPos - scrollRows, 0);
       //this._scrollbarE.scrollTop = Math.max(this._scrollbarE.scrollTop - this._rowHeight, 0);
     }
     this._refreshContent();
@@ -185,5 +192,9 @@ Fastlist.prototype = {
 
   scrollBar : function(event) {
     this._scrollPos = Math.round(this._scrollbarE.scrollTop / this._rowHeight); // TODO ceil()?
+    console.log("scrollTop = " + this._scrollbarE.scrollTop);
+    console.log("entries size = " + this._entries.length);
+    console.log("scroll pos = " + this._scrollPos);
+    this._refreshContent();
   },
 }
