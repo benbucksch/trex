@@ -58,16 +58,21 @@ with <html><head>,<body>, but from there continue with <hbox>/<vbox>,
 
   2.1. Layout
 
-<hbox> and <vbox> will be based on CSS flexbox (and optionally on the
--moz-box, which closely matches the XUL box, if available (Firefox and
-Chrome) and you wish), so they should be fast.
+<hbox> and <vbox> will be based on CSS flexbox (which closely matches
+the XUL box model), and CSS grid (which closely matches XUL <grid>s).
+
+They should be fast to render. They are probably much faster than
+HTML <div> and <table>s, because of the top-down layout of the
+window instead of bottom-up layout of wrapping paragraphs.
+It should also avoid the jiggling of the entire window layout as
+the content in one box changes.
 
 
   2.2. Widget objects
 
-Widget object functions will be added directly to the DOM elements, and
+Widget object functions might be added directly to the DOM elements, and
 attributes and JS properties will be synced, so you can do
-E("okButton").press(); or E("red").checked = true;, and it will work as
+`E("okButton").press();` or `E("red").checked = true;`, and it will work as
 expected and trigger the "changed" event for you.
 
 
