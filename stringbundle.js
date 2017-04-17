@@ -36,6 +36,13 @@
  *
  * ***** END LICENSE BLOCK ***** */
 
+
+// Which translations you have for your app
+// CONFIGURE THIS
+var supportedLanguages = [ "en-US" ];
+var fallbackLanguage = "en-US";
+
+
 /**
  * A string bundle, for loading translations of UI strings.
  *
@@ -205,12 +212,6 @@ StringBundle.prototype = {
 * @see also getUILocale()
 */
 function getLocale() {
-  // Which translations you have for your app
-  // TODO CONFIGURE THIS
-  var supportedLanguages = [ "en", "de" ];
-
-  // Which language to use when the browser has a lang you do not support
-  var fallbackLanguage = "en";
   var browserLanguage = window.navigator.language.substr(0, 2)
   return supportedLanguages.filter(function(lang) {
       return lang == browserLanguage;
